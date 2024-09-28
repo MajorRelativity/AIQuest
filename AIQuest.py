@@ -64,7 +64,7 @@ __/_  /   \ ______/ ''   /'\_,__
     print("You, dear player, are an esteemed detective living in the sleepy town of Pebblebrook.")
     time.sleep(2)
     print("Recently, a tragedy has afflicted Pebblebrook, as <INSERTNAME>, an esteemed member of the community, was found murdered this morning.")
-    time.sleep(2)
+    time.sleep(3)
     print(f"Found dead due to {murder_method} {murder_location}, you are tasked with uncovering the perpretrator in this case and giving closure to the beloved <INSERTNAME>'s family.")
     time.sleep(3)
     print('''
@@ -90,7 +90,7 @@ __/_  /   \ ______/ ''   /'\_,__
         print("That's not the spirit! Try again")
         ready = input("Dear player, are you ready to start the case? ['Yes'/'No'] ")
     time.sleep(2)
-    for i in range(1):
+    for i in range(3):
         dist = "_______" * i
         dists = "       " * i
 
