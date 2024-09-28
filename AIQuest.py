@@ -10,7 +10,7 @@ f.close()
 client = OpenAI(api_key = API_KEY)
 
 ## Functions
-def intro():
+def intro(victim):
     print(f'''
     \\-------|                                                       |--------/
      \\____  |-------------------------------------------------------|  ____ /
@@ -55,9 +55,10 @@ ________________________  ''')
     enter = input("Press 'Enter' to Begin:")
     if(enter == ''):
         murder_method, murderer_order, murder_location = game_setup()
-        print_intro_message(murder_method, murder_location)
+        print_intro_message(murder_method, murder_location, victim)
+        return murder_method, murderer_order, murder_location
     
-def print_intro_message(murder_method, murder_location):
+def print_intro_message(murder_method, murder_location, victim):
     time.sleep(1)
     print("""
 ~         ~~          __
@@ -73,9 +74,9 @@ __/_  /   \ ______/ ''   /'\_,__
   ..    ..-''    ;       ''. ' """)
     print("You, dear player, are an esteemed detective living in the sleepy town of Pebblebrook.")
     time.sleep(2)
-    print("Recently, a tragedy has afflicted Pebblebrook, as <INSERTNAME>, an esteemed member of the community, was found murdered this morning.")
+    print(f"Recently, a tragedy has afflicted Pebblebrook, as {victim}, an esteemed member of the community, was found murdered this morning.")
     time.sleep(3)
-    print(f"Found dead due to {murder_method} {murder_location}, you are tasked with uncovering the perpretrator in this case and giving closure to the beloved <INSERTNAME>'s family.")
+    print(f"Found dead due to {murder_method} {murder_location}, you are tasked with uncovering the perpretrator in this case and giving closure to the beloved {victim}'s family.")
     time.sleep(3)
     print('''
          ____                 ____                 ____                 ____                 ____      
@@ -91,7 +92,7 @@ __/_  /   \ ______/ ''   /'\_,__
                       
 ''')
     time.sleep(1)
-    print("You have narrowed down your suspect list down to five individuals who were in contact with <INSERTNAME> within the 24-hour period before he died.")
+    print(f"You have narrowed down your suspect list down to five individuals who were in contact with {victim} within the 24-hour period before he died.")
     time.sleep(2)
     print("You have interviews set up with each suspect. For each interview, you may only ask ONE question, so ask WISELY.")
     time.sleep(2)
@@ -115,6 +116,7 @@ __/_  /   \ ______/ ''   /'\_,__
      `""") )"""`
  ''')
         time.sleep(0.75)
+
         
 
 def game_setup():
@@ -207,9 +209,9 @@ def get_user_question(name: str, user_prompt: str, suspect_number: int):
         - user_question (str): The question the user wants to ask the suspect
     '''
     if suspect_number == 1:
-        print("You approach the first subject")
+        print("You approach the first suspect")
     else:
-        print("You approach the next subject")
+        print("You approach the next suspect")
 
     print(f"[{name}]: {user_prompt}")
     user_question = input(f"What question would you like to ask {name}? ")
@@ -263,21 +265,56 @@ def print_outro(result, user_guess, victim, motive):
         print(f"You methodically pieced together all the information. By focusing on the answer you were given you were able to correctly deduce who was the murderer. {user_guess} confesses that they killed {victim} because {motive}. With the truth unveiled and justice served Pebblebrook can begin to heal again though it will never be the same.")
     print(f"You wrongly accused {user_guess} of being a murderer. Though they had a strong motive, they refused to go that far. {victim}'s murderer will run free and Pebblebrook will have to try to heal without closure.")
 
-def main():
+def run_game():
+    # Run the Introduction
+    victim = choose_random_name()
+    murder_method, murderer_order, murder_location = intro(victim)
+
+    # Run Character Interview
+    character_list, murderer_motive = run_character_interview(murder_method, murderer_order, murder_location, victim)
+
+    # Run Conclusion
+    run_conclusion(character_list, victim, murderer_motive, murderer_order)
+
+def run_character_interview(murder_method, murderer_order, murder_location, victim):
     character_list = []
+
     for i in range(5):
+        # Get Information About Character
         name = choose_random_name()
-        victim = choose_random_name()
-        character_list.append(name)#need a list of who user has talked to to check user guess
+        character_list.append(name) # list of who user has talked to to check user guess
         job = choose_random_job()
         traits = choose_random_traits()
         motive = choose_motive(victim)
+
+        if (i + 1) == murderer_order:
+            # Store Motive if Murderer
+            murderer_motive = motive
+
         relation = choose_relation()
-        murder_status = get_murder_status(i, 3, "poison")#need murder order from Emma
-        construct_gpt_prompt(name, job, traits, motive, relation, murder_status)#need murder_method from Emma
-        construct_user_prompt(name, job, relation)
+        murder_status = get_murder_status(i, murderer_order, murder_method)
+        
+        # Construct Prompts
+        gpt_prompt = construct_gpt_prompt(name, job, traits, motive, relation, murder_status) # need murder_method from Emma
+        user_prompt = construct_user_prompt(name, job, relation)
+
+        # Interaction
+        print(' ')
+        user_question = get_user_question(name, user_prompt, murderer_order)
+        suspect_response = prompt_gpt(gpt_prompt, user_question)
+        print(f"[{name}] {suspect_response}")
+
+    return character_list, murderer_motive
+
+def run_conclusion(character_list, victim, murderer_motive, murderer_order):
     user_guess = get_user_guess()
-    result = check_user_guess(user_guess, character_list, 3)#need murder order from Emma
-    print_outro(result, user_guess, victim, motive)
+    result = check_user_guess(user_guess, character_list, murderer_order) #need murder order from Emma
+    print_outro(result, user_guess, victim, murderer_motive)
+
+
+
+def main():
+    run_game()
+
     
 main()
