@@ -8,8 +8,13 @@ def choose_random_job():
     job_list = ["Librarian", "Farmer", "Fisherman", "Banker", "Artist", "Mayor", "Doctor", "Maid", "Miner", "Hunter", "Barber", "Carpenter", "Mailman", "Baker", "Trader"]
     print(random.choice(job_list))
 
+def choose_random_traits():
+    trait_list = ["Kind", "Arrogant", "Friendly", "Smart", "Confident", "Loyal", "Strong", "Mad", "Sad", "Decisive"]
+    print(random.choice(trait_list))
+
 def main():
     choose_random_name()
     choose_random_job()
+    choose_random_traits()
 
 main()
