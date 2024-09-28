@@ -20,8 +20,7 @@ def choose_relation():
     relation_list = ["Lover", "Friend", "Sibling", "Neighbor", "Renter", "Employee"]
     return(random.choice(relation_list))
 
-def get_murder_status(mrdrordr, murder_method):
-    i = 3
+def get_murder_status(i, mrdrordr, murder_method):
     if i == mrdrordr:#i will be the i in the for loop that controls the number of people talked to
         return f"the murderer and you're trying to hide that fact and you murdered the victim with {murder_method}."
     return "not the murderer"
@@ -51,16 +50,17 @@ def print_outro(result, user_guess, victim, motive):
 
 def main():
     character_list = []
-    name = choose_random_name()
-    victim = choose_random_name()
-    character_list.append(name)#need a list of who user has talked to to check user guess
-    job = choose_random_job()
-    traits = choose_random_traits()
-    motive = choose_motive(victim)
-    relation = choose_relation()
-    murder_status = get_murder_status(3, "poison")#need murder order from Emma
-    construct_gpt_prompt(name, job, traits, motive, relation, murder_status)#need murder_method from Emma
-    construct_user_prompt(name, job, relation)
+    for i in range(5):
+        name = choose_random_name()
+        victim = choose_random_name()
+        character_list.append(name)#need a list of who user has talked to to check user guess
+        job = choose_random_job()
+        traits = choose_random_traits()
+        motive = choose_motive(victim)
+        relation = choose_relation()
+        murder_status = get_murder_status(i, 3, "poison")#need murder order from Emma
+        construct_gpt_prompt(name, job, traits, motive, relation, murder_status)#need murder_method from Emma
+        construct_user_prompt(name, job, relation)
     user_guess = get_user_guess()
     result = check_user_guess(user_guess, character_list, 3)#need murder order from Emma
     print_outro(result, user_guess, victim, motive)
