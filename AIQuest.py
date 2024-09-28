@@ -32,8 +32,17 @@ def construct_gpt_prompt(name, job, traits, motive, relation, murder_status):
 def construct_user_prompt(name, job, relation):
     print(f"My name is {name} and I work as a {job}. I was the victim's {relation}.")
 
+def get_user_guess():
+    print("Enter the name of who you think the murderer is: ")
+    user_guess = input()
+    return user_guess
+
+
+
 def main():
+    character_list = []
     name = choose_random_name()
+    character_list.append(name)#need a list of who user has talked to to check user guess
     job = choose_random_job()
     traits = choose_random_traits()
     motive = choose_motive()
@@ -41,5 +50,6 @@ def main():
     murder_status = get_murder_status(3)
     construct_gpt_prompt(name, job, traits, motive, relation, murder_status)
     construct_user_prompt(name, job, relation)
+    user_guess = get_user_guess()
 
 main()
