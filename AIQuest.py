@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-# Setup ChatGPT
+## Setup ChatGPT
 f = open("API_KEY.txt","r")
 API_KEY = f.read()
 f.close()
@@ -19,7 +19,7 @@ def call_chatGPT_example():
 
     print(response.choices[0].message.content)
 
-def prompt_gpt(gpt_role, user_question):
+def prompt_gpt(gpt_role: str, user_question: str):
     '''
      Sends the user question to ChatGPT and returns the response
      Takes: 
@@ -40,7 +40,24 @@ def prompt_gpt(gpt_role, user_question):
     response = gpt_steam.choices[0].message.content
     return response
 
+def get_user_question(name: str):
+    ''' 
+     Prompts the user for what question they want to ask the suspect.
+     Takes:
+        - name (str): Name of the suspect they are questioning
+     
+     Returns:
+        - user_question (str): The question the user wants to ask the suspect
+    
+    '''
+
+    user_question = input(f"What question would you like to ask {name}? ")
+    return user_question
+
+
+
 def main():
-     print(prompt_gpt("Your favorite color is blue","What is your favorite color?"))
+     user_question = get_user_question("Jacob")
+     print(prompt_gpt("Your favorite color is blue", user_question))
 
 main()
