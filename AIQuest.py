@@ -1,3 +1,6 @@
+def choose_random_name():
+    print("Bob")
+    
 def intro():
     print("Yoink")
 
