@@ -13,7 +13,7 @@ def choose_random_traits():
     return(random.choice(trait_list))
 
 def choose_motive():
-    motive_list = ["I loved them but they didn't love me back", "I wanted their land", "they were blackmailing me", "they saw me stealing bread", "they dated the person I love", "I got paid to do it", "they creeped me out", "they wouldn't stop bothering me for the debt I owed", "I wanted to be noticed", "I discovered they caused the accident that killed my father"]
+    motive_list = ["I loved them but they didn't love me back", "I wanted their land", "the victim was blackmailing me", "the victim saw me stealing bread", "the victim dated the person I love", "I got paid to do it", "the victim creeped me out", "the victim wouldn't stop bothering me for the debt I owed", "I wanted to be noticed", "I discovered the victim caused the accident that killed my father"]
     return(random.choice(motive_list))
 
 def choose_relation():
@@ -23,14 +23,14 @@ def choose_relation():
 def get_murder_status(mrdrordr):
     i = 3
     if i == mrdrordr:#i will be the i in the for loop that controls the number of people talked to
-        return "the murderer"
+        return "the murderer and you're trying to hide that fact"
     return "not the murderer"
 
-def construct_gpt_prompt(name, job, traits, motive, relation, murder_status):
-    print(f"Respond as {name} who works as a {job} and is {traits}. They are the victim's {relation}. They are {murder_status} and their motive was {motive}.")
+def construct_gpt_prompt(name, job, traits, motive, relation, murder_status, murder_method):
+    return(f"You are {name} who works as a {job} and is {traits}. You are the victim's {relation}. You are {murder_status} and you murdered the victim with {murder_method}. Your motive was {motive}.")
     
 def construct_user_prompt(name, job, relation):
-    print(f"My name is {name} and I work as a {job}. I was the victim's {relation}.")
+    return(f"My name is {name} and I work as a {job}. I was the victim's {relation}.")
 
 def get_user_guess():
     print("Enter the name of who you think the murderer is: ")
@@ -39,8 +39,15 @@ def get_user_guess():
 
 def check_user_guess(user_guess, character_list, mrdrorder):
     if user_guess == character_list[mrdrorder - 1]:
-        return "Congrats! You found the murderer!"
-    return "Sorry you accused an innocent person."
+        #return "Congrats! You found the murderer!"
+        return True
+    #return "Sorry you accused an innocent person."
+    return False
+
+def print_outro(result):
+    if result == True:
+        print("")
+    print("")
 
 def main():
     character_list = []
@@ -51,9 +58,9 @@ def main():
     motive = choose_motive()
     relation = choose_relation()
     murder_status = get_murder_status(3)#need murder order from Emma
-    construct_gpt_prompt(name, job, traits, motive, relation, murder_status)
+    construct_gpt_prompt(name, job, traits, motive, relation, murder_status, "poison")#need murder_method from Emma
     construct_user_prompt(name, job, relation)
     user_guess = get_user_guess()
-    check_user_guess(user_guess, character_list, 3)#need murder order from Emma
-
+    result = check_user_guess(user_guess, character_list, 3)#need murder order from Emma
+    print_outro(result)
 main()
