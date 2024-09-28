@@ -1,7 +1,7 @@
 def choose_random_name():
     print("Bob")
-
-def main():
-    print("Hello World")
     
+def main():
+    choose_random_name()
+
 main()
