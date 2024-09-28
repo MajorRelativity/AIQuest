@@ -1,5 +1,6 @@
 import time
 import random
+
 def intro():
     print(f'''
     \\-------|                                                       |--------/
@@ -154,10 +155,6 @@ def choose_murder_situation():
 
 def choose_random_killer():
     return random.randint(1,5)
-
-
-
-
 
 def main():
     print("Hello World")
