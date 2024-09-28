@@ -71,12 +71,13 @@ __/_  /   \ ______/ ''   /'\_,__
 ; '/__\,.--';|   |[] .-.| O{ _ }
 :' |  | []  -|   ''--:.;[,.'\,/
 '  |[]|,.--'' '',   ''-,.    |
-  ..    ..-''    ;       ''. ' """)
+  ..    ..-''    ;       ''. ' 
+          """)
     print("You, dear player, are an esteemed detective living in the sleepy town of Pebblebrook.")
     time.sleep(2)
     print(f"Recently, a tragedy has afflicted Pebblebrook, as {victim}, an esteemed member of the community, was found murdered this morning.")
     time.sleep(3)
-    print(f"Found dead due to {murder_method} {murder_location}, you are tasked with uncovering the perpretrator in this case and giving closure to the beloved {victim}'s family.")
+    print(f"Found dead due to {murder_method} {murder_location}, you are tasked with uncovering the perpretrator in this case and\n giving closure to the beloved {victim}'s family.")
     time.sleep(3)
     print('''
          ____                 ____                 ____                 ____                 ____      
@@ -112,7 +113,7 @@ __/_  /   \ ______/ ''   /'\_,__
   /  \___/^\___\%&%&&
   |  | []   [] |%\Y&%'   {dists}     o
   |  |   .-.   | ||      {dists}     [
-~~@._|@@_|||_@@|~||_____{dist}______/\_____ --->
+~~@._|@@_|||_@@|~||_____{dist}_____ /\ ____ --->
      `""") )"""`
  ''')
         time.sleep(0.75)
@@ -163,7 +164,7 @@ def choose_murder_situation():
     return method, location
 
 def choose_random_killer():
-    return random.randint(1,5)
+    return random.randint(1,3)
   
 def call_chatGPT_example():
     '''Example API call where the user is asking ChatGPT what their favorite color is and the response is printed'''
@@ -188,6 +189,7 @@ def prompt_gpt(gpt_role: str, user_question: str):
         - response (str): Response ChatGPT gives the user
         
     '''
+    print(gpt_role)
     gpt_steam = client.chat.completions.create(
         model = "gpt-3.5-turbo",
         messages = [
@@ -215,6 +217,7 @@ def get_user_question(name: str, user_prompt: str, suspect_number: int):
 
     print(f"[{name}]: {user_prompt}")
     user_question = input(f"What question would you like to ask {name}? ")
+    print(' ')
     return user_question
 
 def choose_random_name():
@@ -222,7 +225,7 @@ def choose_random_name():
     return(random.choice(name_list))
     
 def choose_random_job():
-    job_list = ["Librarian", "Farmer", "Fisherman", "Banker", "Artist", "Mayor", "Doctor", "Maid", "Miner", "Hunter", "Barber", "Carpenter", "Mailman", "Baker", "Trader"]
+    job_list = ["librarian", "farmer", "fisherman", "banker", "artist", "mayor", "doctor", "maid", "miner", "hunter", "barber", "carpenter", "mailman", "baker", "trader"]
     return(random.choice(job_list))
 
 def choose_random_traits():
@@ -230,40 +233,43 @@ def choose_random_traits():
     return(random.choice(trait_list))
 
 def choose_motive(victim):
-    motive_list = [f"I loved {victim} but they didn't love me back", "I wanted their land", f"{victim} was blackmailing me", f"{victim} saw me stealing bread", f"{victim} dated the person I love", "I got paid to do it", f"{victim} creeped me out", f"{victim} wouldn't stop bothering me for the debt I owed", "I wanted to be noticed", f"I discovered {victim} caused the accident that killed my father"]
+    motive_list = [f"you loved {victim} but they didn't love me back", "you wanted their land", f"{victim} was blackmailing you", f"{victim} saw you stealing bread", f"{victim} dated the person you love", "you got paid to do it", f"{victim} creeped you out", f"{victim} wouldn't stop bothering you for the debt you owed", "you wanted to be noticed", f"you discovered {victim} caused the accident that killed your father"]
     return(random.choice(motive_list))
 
 def choose_relation():
-    relation_list = ["Lover", "Friend", "Sibling", "Neighbor", "Renter", "Employee"]
+    relation_list = ["lover", "spouse", "friend", "sibling", "neighbor", "renter", "employee"]
     return(random.choice(relation_list))
 
-def get_murder_status(i, mrdrordr, murder_method):
-    if i == mrdrordr:#i will be the i in the for loop that controls the number of people talked to
-        return f"the murderer and you're trying to hide that fact and you murdered the victim with {murder_method}."
+def get_murder_status(i, mrdrordr, murder_method, murder_location):
+    if i == mrdrordr - 1:#i will be the i in the for loop that controls the number of people talked to
+        return f"the murderer. You murdered the victim with {murder_method} {murder_location}. You are not hiding your murderous intent well"
     return "not the murderer"
 
-def construct_gpt_prompt(name, job, traits, motive, relation, murder_status):
-    return(f"You are {name} who works as a {job} and is {traits}. You are the victim's {relation}. You are {murder_status}. Your motive was {motive}.")
+def construct_gpt_prompt(name, job, traits, motive, relation, murder_status, victim):
+    return(f"You are {name} and you work as a {job}. You are {traits}. The victim of the murder is {victim}. You are {victim}'s {relation}. Your motive was {motive}. Your response should be 6 sentences. You are {murder_status}.")
     
-def construct_user_prompt(name, job, relation):
-    return(f"My name is {name} and I work as a {job}. I was the victim's {relation}.")
+def construct_user_prompt(name, job, relation, victim):
+    return(f"My name is {name} and I work as a {job}. I was {victim}'s {relation}.")
 
 def get_user_guess():
     print("Enter the name of who you think the murderer is: ")
     user_guess = input()
+    print(' ')
     return user_guess
 
 def check_user_guess(user_guess, character_list, mrdrorder):
-    if user_guess == character_list[mrdrorder - 1]:
+    if user_guess.lower() == character_list[mrdrorder - 1].lower():
         #return "Congrats! You found the murderer!"
         return True
     #return "Sorry you accused an innocent person."
     return False
 
-def print_outro(result, user_guess, victim, motive):
+def print_outro(result, user_guess, victim, murderer):
     if result == True:
-        print(f"You methodically pieced together all the information. By focusing on the answer you were given you were able to correctly deduce who was the murderer. {user_guess} confesses that they killed {victim} because {motive}. With the truth unveiled and justice served Pebblebrook can begin to heal again though it will never be the same.")
-    print(f"You wrongly accused {user_guess} of being a murderer. Though they had a strong motive, they refused to go that far. {victim}'s murderer will run free and Pebblebrook will have to try to heal without closure.")
+        print(f"You methodically pieced together all the information. By focusing on the answer you were given you were able to correctly deduce who was the murderer. {user_guess} confesses that they killed {victim}. With the truth unveiled and justice served Pebblebrook can begin to heal again though it will never be the same.")
+    else:
+        print(f"You wrongly accused {user_guess} of being a murderer. {victim}'s murderer will run free and Pebblebrook will have to try to heal without closure.")
+        print(f" -- You Lose => The murderer was {murderer}")
 
 def run_game():
     # Run the Introduction
@@ -271,15 +277,15 @@ def run_game():
     murder_method, murderer_order, murder_location = intro(victim)
 
     # Run Character Interview
-    character_list, murderer_motive = run_character_interview(murder_method, murderer_order, murder_location, victim)
+    character_list = run_character_interview(murder_method, murderer_order, murder_location, victim)
 
     # Run Conclusion
-    run_conclusion(character_list, victim, murderer_motive, murderer_order)
+    run_conclusion(character_list, victim, murderer_order)
 
 def run_character_interview(murder_method, murderer_order, murder_location, victim):
     character_list = []
 
-    for i in range(5):
+    for i in range(3):
         # Get Information About Character
         name = choose_random_name()
         character_list.append(name) # list of who user has talked to to check user guess
@@ -287,16 +293,12 @@ def run_character_interview(murder_method, murderer_order, murder_location, vict
         traits = choose_random_traits()
         motive = choose_motive(victim)
 
-        if (i + 1) == murderer_order:
-            # Store Motive if Murderer
-            murderer_motive = motive
-
         relation = choose_relation()
-        murder_status = get_murder_status(i, murderer_order, murder_method)
+        murder_status = get_murder_status(i, murderer_order, murder_method, murder_location)
         
         # Construct Prompts
-        gpt_prompt = construct_gpt_prompt(name, job, traits, motive, relation, murder_status) # need murder_method from Emma
-        user_prompt = construct_user_prompt(name, job, relation)
+        gpt_prompt = construct_gpt_prompt(name, job, traits, motive, relation, murder_status, victim) # need murder_method from Emma
+        user_prompt = construct_user_prompt(name, job, relation, victim)
 
         # Interaction
         print(' ')
@@ -304,12 +306,12 @@ def run_character_interview(murder_method, murderer_order, murder_location, vict
         suspect_response = prompt_gpt(gpt_prompt, user_question)
         print(f"[{name}] {suspect_response}")
 
-    return character_list, murderer_motive
+    return character_list
 
-def run_conclusion(character_list, victim, murderer_motive, murderer_order):
+def run_conclusion(character_list, victim, murderer_order):
     user_guess = get_user_guess()
     result = check_user_guess(user_guess, character_list, murderer_order) #need murder order from Emma
-    print_outro(result, user_guess, victim, murderer_motive)
+    print_outro(result, user_guess, victim, character_list[murderer_order - 1])
 
 
 
