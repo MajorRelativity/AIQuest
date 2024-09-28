@@ -1,12 +1,13 @@
 from openai import OpenAI
 
+# Setup ChatGPT
 f = open("API_KEY.txt","r")
 API_KEY = f.read()
 f.close()
 
 client = OpenAI(api_key = API_KEY)
 
-def initialize_chatGPT():
+def call_chatGPT_example():
 
     response = client.chat.completions.create(
         model = "gpt-3.5-turbo",
@@ -15,10 +16,9 @@ def initialize_chatGPT():
         ]
     )
 
-    print(response)
+    print(response.choices[0].message.content)
 
 def main():
-    initialize_chatGPT()
-    print("Hello World")
+     call_chatGPT_example()
 
 main()
