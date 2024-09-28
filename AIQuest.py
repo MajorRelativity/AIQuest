@@ -1,3 +1,6 @@
+def intro():
+    print("Yoink")
+
 def test1():
     print("Hello World")
 
