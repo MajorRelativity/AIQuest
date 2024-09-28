@@ -80,20 +80,20 @@ __/_  /   \ ______/ ''   /'\_,__
     print(f"Found dead due to {murder_method} {murder_location}, you are tasked with uncovering the perpretrator in this case and\n giving closure to the beloved {victim}'s family.")
     time.sleep(3)
     print('''
-         ____                 ____                 ____                 ____                 ____      
-       /@ ...@\\             /@ ...@\\             /@ ...@\\             /@ ...@\\              /@ ...@\\
-       @/////.%             @/////.%             @/////.%             @/////.%             @/////.%
-       @@@//@@@             @@@//@@@             @@@//@@@             @@@//@@@             @@@//@@@
-        @@  @@               @@  @@               @@  @@               @@  @@               @@  @@ 
-         @##@                 @##@                 @##@                 @##@                 @##@
-        @%++#@               @%++#@               @%++#@               @%++#@               @%++#@
-   @@@@@#++++#@@@@@     @@@@@#++++#@@@@@     @@@@@#++++#@@@@@     @@@@@#++++#@@@@@     @@@@@#++++#@@@@@
-  @@#++++++++++++#@@   @@#++++++++++++#@@   @@#++++++++++++#@@   @@#++++++++++++#@@   @@#++++++++++++#@@
-  @@??????????????@@   @@??????????????@@   @@??????????????@@   @@??????????????@@   @@??????????????@@
+         ____                 ____                 ____               
+       /@ ...@\\             /@ ...@\\             /@ ...@\\         
+       @/////.%             @/////.%             @/////.%             
+       @@@//@@@             @@@//@@@             @@@//@@@            
+        @@  @@               @@  @@               @@  @@              
+         @##@                 @##@                 @##@              
+        @%++#@               @%++#@               @%++#@              
+   @@@@@#++++#@@@@@     @@@@@#++++#@@@@@     @@@@@#++++#@@@@@     
+  @@#++++++++++++#@@   @@#++++++++++++#@@   @@#++++++++++++#@@   
+  @@??????????????@@   @@??????????????@@   @@??????????????@@  
                       
 ''')
     time.sleep(1)
-    print(f"You have narrowed down your suspect list down to five individuals who were in contact with {victim} within the 24-hour period before he died.")
+    print(f"You have narrowed down your suspect list down to three individuals who were in contact with {victim} within the 24-hour period before he died.")
     time.sleep(2)
     print("You have interviews set up with each suspect. For each interview, you may only ask ONE question, so ask WISELY.")
     time.sleep(2)
@@ -189,7 +189,6 @@ def prompt_gpt(gpt_role: str, user_question: str):
         - response (str): Response ChatGPT gives the user
         
     '''
-    print(gpt_role)
     gpt_steam = client.chat.completions.create(
         model = "gpt-3.5-turbo",
         messages = [
@@ -229,7 +228,7 @@ def choose_random_job():
     return(random.choice(job_list))
 
 def choose_random_traits():
-    trait_list = ["Kind", "Arrogant", "Friendly", "Smart", "Confident", "Loyal", "Strong", "Mad", "Sad", "Decisive"]
+    trait_list = ["Kind", "Arrogant", "Friendly", "Smart", "Confident", "Loyal", "Strong", "Sad", "Decisive"]
     return(random.choice(trait_list))
 
 def choose_motive(victim):
@@ -240,18 +239,19 @@ def choose_relation():
     relation_list = ["lover", "spouse", "friend", "sibling", "neighbor", "renter", "employee"]
     return(random.choice(relation_list))
 
-def get_murder_status(i, mrdrordr, murder_method, murder_location):
+def get_murder_status(i, mrdrordr, murder_method, murder_location, murder_motive):
     if i == mrdrordr - 1:#i will be the i in the for loop that controls the number of people talked to
-        return f"the murderer. You murdered the victim with {murder_method} {murder_location}. You are not hiding your murderous intent well"
+        return f"the murderer. You murdered the victim with {murder_method} {murder_location} because {murder_motive}. Without revealing yourself as the murderer, you give multiple clues"
     return "not the murderer"
 
 def construct_gpt_prompt(name, job, traits, motive, relation, murder_status, victim):
-    return(f"You are {name} and you work as a {job}. You are {traits}. The victim of the murder is {victim}. You are {victim}'s {relation}. Your motive was {motive}. Your response should be 6 sentences. You are {murder_status}.")
+    return(f"You are {name} and you work as a {job}. You are {traits}. The victim of the murder is {victim}. You are {victim}'s {relation}. Your response should be 8 sentences. You are {murder_status}.")
     
 def construct_user_prompt(name, job, relation, victim):
     return(f"My name is {name} and I work as a {job}. I was {victim}'s {relation}.")
 
 def get_user_guess():
+    print(' ')
     print("Enter the name of who you think the murderer is: ")
     user_guess = input()
     print(' ')
@@ -294,7 +294,7 @@ def run_character_interview(murder_method, murderer_order, murder_location, vict
         motive = choose_motive(victim)
 
         relation = choose_relation()
-        murder_status = get_murder_status(i, murderer_order, murder_method, murder_location)
+        murder_status = get_murder_status(i, murderer_order, murder_method, murder_location, motive)
         
         # Construct Prompts
         gpt_prompt = construct_gpt_prompt(name, job, traits, motive, relation, murder_status, victim) # need murder_method from Emma
