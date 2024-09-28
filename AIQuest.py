@@ -37,7 +37,10 @@ def get_user_guess():
     user_guess = input()
     return user_guess
 
-
+def check_user_guess(user_guess, character_list, mrdrorder):
+    if user_guess == character_list[mrdrorder - 1]:
+        return "Congrats! You found the murderer!"
+    return "Sorry you accused an innocent person."
 
 def main():
     character_list = []
@@ -47,9 +50,10 @@ def main():
     traits = choose_random_traits()
     motive = choose_motive()
     relation = choose_relation()
-    murder_status = get_murder_status(3)
+    murder_status = get_murder_status(3)#need murder order from Emma
     construct_gpt_prompt(name, job, traits, motive, relation, murder_status)
     construct_user_prompt(name, job, relation)
     user_guess = get_user_guess()
+    check_user_guess(user_guess, character_list, 3)#need murder order from Emma
 
 main()
