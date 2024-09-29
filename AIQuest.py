@@ -73,11 +73,12 @@ __/_  /   \ ______/ ''   /'\_,__
 '  |[]|,.--'' '',   ''-,.    |
   ..    ..-''    ;       ''. ' 
           """)
-    print("You, dear player, are an esteemed detective living in the sleepy town of Pebblebrook.")
+    print(" ")
+    print("[Narrator]: You, dear player, are an esteemed detective living in the sleepy town of Pebblebrook.")
     time.sleep(2)
-    print(f"Recently, a tragedy has afflicted Pebblebrook, as {victim}, an esteemed member of the community, was found murdered this morning.")
+    print(f"[Narrator]: Recently, a tragedy has afflicted Pebblebrook, as {victim}, a valued member of the community, was found murdered this morning.")
     time.sleep(3)
-    print(f"Found dead due to {murder_method} {murder_location}, you are tasked with uncovering the perpretrator in this case and\n giving closure to the beloved {victim}'s family.")
+    print(f"[Narrator]: Found dead due to {murder_method} {murder_location}, you are tasked with uncovering the perpretrator in this case and\ngiving closure to the beloved {victim}'s family.")
     time.sleep(3)
     print('''
          ____                 ____                 ____               
@@ -93,20 +94,22 @@ __/_  /   \ ______/ ''   /'\_,__
                       
 ''')
     time.sleep(1)
-    print(f"You have narrowed down your suspect list down to three individuals who were in contact with {victim} within the 24-hour period before he died.")
+    print(f"[Narrator]: You have narrowed down your suspect list down to three individuals who were in contact with {victim} within the 24-hour period before he died.")
     time.sleep(2)
-    print("You have interviews set up with each suspect. For each interview, you may only ask ONE question, so ask WISELY.")
+    print("[Narrator]: You have interviews set up with each suspect. For each interview, you may only ask ONE question, so ask WISELY.")
     time.sleep(2)
-    ready = input("Dear player, are you ready to start the case? ['Yes'/'No'] ")
-    while ready != 'Yes':
-        print("That's not the spirit! Try again")
-        ready = input("Dear player, are you ready to start the case? ['Yes'/'No'] ")
+    print("[Narrator]: Dear player, are you ready to start the case? ['Yes'/'No'] ")
+    ready = input("[You]: ")
+    while ready.lower() != 'yes':
+        print("[Narrator]: That's not the spirit! Try again")
+        print("[Narrator]: Dear player, are you ready to start the case? ['Yes'/'No'] ")
+        ready = input("[You]: ")
     time.sleep(2)
     for i in range(3):
         dist = "_______" * i
         dists = "       " * i
 
-        print(f'''Off you go...
+        print(f'''[Narrator]: Off you go...
         `'::.
     _________H ,/%&%,
    /\     _   \%&&%&%
@@ -210,12 +213,14 @@ def get_user_question(name: str, user_prompt: str, suspect_number: int):
         - user_question (str): The question the user wants to ask the suspect
     '''
     if suspect_number == 1:
-        print("You approach the first suspect")
+        print("[Narrator]: You approach the first suspect")
     else:
-        print("You approach the next suspect")
+        print("[Narrator]: You approach the next suspect")
 
     print(f"[{name}]: {user_prompt}")
-    user_question = input(f"What question would you like to ask {name}? ")
+    print(' ')
+    print(f"[Narrator]: What question would you like to ask {name}?")
+    user_question = input("[You]: ")
     print(' ')
     return user_question
 
@@ -252,8 +257,8 @@ def construct_user_prompt(name, job, relation, victim):
 
 def get_user_guess():
     print('')
-    print("Enter the name of who you think the murderer is: ")
-    user_guess = input()
+    print("[Narrator]: Enter the name of who you think the murderer is: ")
+    user_guess = input("[You]: ")
     print(' ')
     return user_guess
 
@@ -266,10 +271,14 @@ def check_user_guess(user_guess, character_list, mrdrorder):
 
 def print_outro(result, user_guess, victim, murderer):
     if result == True:
-        print(f"You methodically pieced together all the information. By focusing on the answer you were given you were able to correctly deduce who was the murderer. {user_guess} confesses that they killed {victim}. With the truth unveiled and justice served Pebblebrook can begin to heal again though it will never be the same.")
+        print(f"[Narrator]: You methodically pieced together all the information. By focusing on the answer you were given you were able to correctly deduce who was the murderer. {user_guess} confesses that they killed {victim}. With the truth unveiled and justice served Pebblebrook can begin to heal again though it will never be the same.")
+        print(" ")
+        print("-- YOU WIN --")
     else:
-        print(f"You wrongly accused {user_guess} of being a murderer. {victim}'s murderer will run free and Pebblebrook will have to try to heal without closure.")
-        print(f" -- You Lose => The murderer was {murderer}")
+        print(f"[Narrator]: You wrongly accused {user_guess} of being a murderer. {victim}'s murderer will run free and Pebblebrook will have to try to heal without closure.")
+        print(" ")
+        print("-- YOU LOSE -- ")
+        print(f"The murderer was {murderer}")
 
 def run_game():
     # Run the Introduction
@@ -286,6 +295,9 @@ def run_character_interview(murder_method, murderer_order, murder_location, vict
     character_list = []
 
     for i in range(3):
+        print(" ")
+        print(f" -- INTERVIEW #{i + 1} ---")
+
         # Get Information About Character
         name = choose_random_name()
         character_list.append(name) # list of who user has talked to to check user guess
@@ -302,9 +314,9 @@ def run_character_interview(murder_method, murderer_order, murder_location, vict
 
         # Interaction
         print(' ')
-        user_question = get_user_question(name, user_prompt, murderer_order)
+        user_question = get_user_question(name, user_prompt, i + 1)
         suspect_response = prompt_gpt(gpt_prompt, user_question)
-        print(f"[{name}] {suspect_response}")
+        print(f"[{name}]: {suspect_response}")
 
     return character_list
 
@@ -312,8 +324,6 @@ def run_conclusion(character_list, victim, murderer_order):
     user_guess = get_user_guess()
     result = check_user_guess(user_guess, character_list, murderer_order) #need murder order from Emma
     print_outro(result, user_guess, victim, character_list[murderer_order - 1])
-
-
 
 def main():
     run_game()
