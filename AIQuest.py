@@ -241,17 +241,17 @@ def choose_relation():
 
 def get_murder_status(i, mrdrordr, murder_method, murder_location, murder_motive):
     if i == mrdrordr - 1:#i will be the i in the for loop that controls the number of people talked to
-        return f"the murderer. You murdered the victim with {murder_method} {murder_location} because {murder_motive}. Without revealing yourself as the murderer, you give multiple clues"
-    return "not the murderer"
+        return f"the murderer. You murdered the victim with {murder_method} {murder_location} because {murder_motive}. Without revealing yourself as the murderer, in your response you accidentally give multiple clues that you are the murderer"
+    return f"not the murderer. You are aware that the victim was murdered with {murder_method} {murder_location}"
 
 def construct_gpt_prompt(name, job, traits, motive, relation, murder_status, victim):
-    return(f"You are {name} and you work as a {job}. You are {traits}. The victim of the murder is {victim}. You are {victim}'s {relation}. Your response should be 8 sentences. You are {murder_status}.")
+    return(f"You are {name} and you work as a {job}. You are {traits}. You are currently being interrogated by a detective. You know the victim of the murder is {victim}. You are the {relation} of the victim. Your response should be at least 12 sentences. You are {murder_status}.")
     
 def construct_user_prompt(name, job, relation, victim):
     return(f"My name is {name} and I work as a {job}. I was {victim}'s {relation}.")
 
 def get_user_guess():
-    print(' ')
+    print('')
     print("Enter the name of who you think the murderer is: ")
     user_guess = input()
     print(' ')
